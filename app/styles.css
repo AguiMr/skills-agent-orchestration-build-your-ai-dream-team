@@ -1,0 +1,546 @@
+/* Project Pulse — lightweight, framework-free dashboard styles.
+   Markup contract is summarized in the handoff report. */
+:root {
+  color-scheme: light;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --ink: #172b3a;
+  --ink-muted: #526575;
+  --ink-subtle: #6c7c89;
+  --canvas: #f3f7f9;
+  --surface: #ffffff;
+  --line: #dce6eb;
+  --line-strong: #c8d6de;
+  --teal: #087e83;
+  --teal-dark: #075f66;
+  --teal-soft: #e3f4f2;
+  --blue-soft: #eaf2fa;
+  --shadow-card: 0 2px 5px rgb(23 43 58 / 5%), 0 12px 30px rgb(23 43 58 / 5%);
+  --shadow-card-hover: 0 5px 12px rgb(23 43 58 / 8%), 0 18px 42px rgb(23 43 58 / 9%);
+  --radius-card: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  background: var(--canvas);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse at 92% 0%, rgb(208 236 234 / 36%), transparent 34rem),
+    var(--canvas);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+button,
+a {
+  font: inherit;
+}
+
+a {
+  color: var(--teal-dark);
+}
+
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid #087e83;
+  outline-offset: 3px;
+}
+
+.page-shell {
+  width: min(1200px, calc(100% - 48px));
+  margin-inline: auto;
+  padding-block: 34px 64px;
+}
+
+.dashboard-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  min-height: 54px;
+  margin-bottom: 56px;
+}
+
+.brand,
+.brand-lockup {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 750;
+  letter-spacing: -0.025em;
+  text-decoration: none;
+}
+
+.brand-mark {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(145deg, #13969a, #087076);
+  box-shadow: 0 5px 14px rgb(8 126 131 / 24%);
+}
+
+.brand-mark svg {
+  width: 21px;
+  height: 21px;
+}
+
+.header-note,
+.dashboard-updated {
+  color: var(--ink-muted);
+  font-size: 13px;
+}
+
+.dashboard-intro {
+  max-width: 740px;
+  margin-bottom: 32px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 12px;
+  color: var(--teal-dark);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.eyebrow::before {
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  content: "";
+}
+
+.dashboard-title,
+.dashboard-intro h1 {
+  margin: 0;
+  color: var(--ink);
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 760;
+  letter-spacing: -0.055em;
+  line-height: 1.12;
+}
+
+.dashboard-description,
+.dashboard-intro > p:not(.eyebrow) {
+  max-width: 620px;
+  margin: 14px 0 0;
+  color: var(--ink-muted);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.dashboard-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 16px;
+}
+
+.dashboard-toolbar h2,
+.section-title {
+  margin: 0;
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 720;
+  letter-spacing: -0.02em;
+}
+
+.dashboard-count {
+  color: var(--ink-subtle);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Apply this class to the project-card collection, not the individual card. */
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 18px;
+}
+
+.project-card {
+  position: relative;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  padding: 23px 24px 21px;
+  overflow-wrap: anywhere;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease;
+}
+
+.project-card:hover,
+.project-card:focus-within {
+  transform: translateY(-2px);
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.project-card:focus-within {
+  outline: 3px solid rgb(8 126 131 / 35%);
+  outline-offset: 3px;
+}
+
+.project-card__top,
+.project-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.project-card__heading {
+  min-width: 0;
+}
+
+.project-card__name,
+.project-card h2 {
+  margin: 0;
+  color: var(--ink);
+  font-size: 19px;
+  font-weight: 730;
+  letter-spacing: -0.035em;
+  line-height: 1.3;
+}
+
+.project-card__owner,
+.project-owner {
+  margin: 5px 0 0;
+  color: var(--ink-muted);
+  font-size: 13px;
+}
+
+.project-card__summary,
+.project-summary {
+  margin: 17px 0 20px;
+  color: #42596a;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.project-card__signals,
+.project-signals {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.status-badge,
+.priority-badge,
+.project-status,
+.project-priority {
+  display: inline-flex;
+  min-height: 26px;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 750;
+  line-height: 1.25;
+  white-space: nowrap;
+}
+
+.status-badge::before,
+.project-status::before {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: currentColor;
+  content: "";
+}
+
+.status-badge[data-status="on-track"],
+.status-badge[data-status="on track"],
+.status-badge[data-status="active"],
+.project-status[data-status="on-track"],
+.project-status[data-status="on track"],
+.project-status[data-status="active"] {
+  border-color: #b9e2d0;
+  color: #176342;
+  background: #e8f6ee;
+}
+
+.status-badge[data-status="at-risk"],
+.status-badge[data-status="at risk"],
+.status-badge[data-status="needs-attention"],
+.project-status[data-status="at-risk"],
+.project-status[data-status="at risk"] {
+  border-color: #f0d69a;
+  color: #704900;
+  background: #fff5d9;
+}
+
+.status-badge[data-status="blocked"],
+.status-badge[data-status="off-track"],
+.status-badge[data-status="off track"],
+.project-status[data-status="blocked"],
+.project-status[data-status="off-track"] {
+  border-color: #edc0bd;
+  color: #8a302b;
+  background: #fff0ee;
+}
+
+.status-badge[data-status="complete"],
+.status-badge[data-status="completed"],
+.project-status[data-status="complete"],
+.project-status[data-status="completed"] {
+  border-color: #c8d8eb;
+  color: #355a80;
+  background: #edf4fb;
+}
+
+.status-badge:not([data-status]),
+.project-status:not([data-status]) {
+  border-color: var(--line);
+  color: #42596a;
+  background: #f3f6f8;
+}
+
+.priority-badge,
+.project-priority {
+  border-color: var(--line);
+  color: #42596a;
+  background: #f5f7f8;
+}
+
+.priority-badge::before,
+.project-priority::before {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 2px;
+  background: currentColor;
+  content: "";
+}
+
+.priority-badge[data-priority="critical"],
+.priority-badge[data-priority="urgent"],
+.project-priority[data-priority="critical"],
+.project-priority[data-priority="urgent"] {
+  border-color: #edc0bd;
+  color: #8a302b;
+  background: #fff0ee;
+}
+
+.priority-badge[data-priority="high"],
+.project-priority[data-priority="high"] {
+  border-color: #f0d69a;
+  color: #704900;
+  background: #fff5d9;
+}
+
+.priority-badge[data-priority="medium"],
+.project-priority[data-priority="medium"] {
+  border-color: #c8d8eb;
+  color: #355a80;
+  background: #edf4fb;
+}
+
+.priority-badge[data-priority="low"],
+.project-priority[data-priority="low"] {
+  border-color: #b9e2d0;
+  color: #176342;
+  background: #e8f6ee;
+}
+
+.project-card__meta,
+.project-card-meta {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: 16px;
+  margin-top: auto;
+  padding-top: 17px;
+  border-top: 1px solid #e8eef1;
+}
+
+.meta-item,
+.project-card__activity {
+  min-width: 0;
+}
+
+.meta-label,
+.project-card__activity-label {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--ink-subtle);
+  font-size: 10px;
+  font-weight: 750;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.meta-value,
+.project-card__activity-value {
+  display: block;
+  color: #344b5b;
+  font-size: 12px;
+  font-weight: 570;
+  line-height: 1.5;
+}
+
+.dashboard-empty,
+.dashboard-message {
+  grid-column: 1 / -1;
+  padding: 32px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-card);
+  color: var(--ink-muted);
+  background: rgb(255 255 255 / 75%);
+  text-align: center;
+}
+
+.dashboard-empty h2,
+.dashboard-message h2 {
+  margin: 0 0 6px;
+  color: var(--ink);
+  font-size: 17px;
+}
+
+.dashboard-empty p,
+.dashboard-message p {
+  margin: 0;
+}
+
+.dashboard-footer {
+  margin-top: 30px;
+  color: var(--ink-subtle);
+  font-size: 12px;
+}
+
+@media (max-width: 760px) {
+  .page-shell {
+    width: min(100% - 36px, 620px);
+    padding-block: 24px 48px;
+  }
+
+  .dashboard-header {
+    margin-bottom: 42px;
+  }
+
+  .dashboard {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    font-size: 14px;
+  }
+
+  .page-shell {
+    width: calc(100% - 28px);
+    padding-block: 16px 36px;
+  }
+
+  .dashboard-header {
+    min-height: 44px;
+    margin-bottom: 36px;
+  }
+
+  .brand-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+  }
+
+  .header-note {
+    max-width: 130px;
+    font-size: 11px;
+    text-align: right;
+  }
+
+  .dashboard-intro {
+    margin-bottom: 26px;
+  }
+
+  .dashboard-description,
+  .dashboard-intro > p:not(.eyebrow) {
+    font-size: 14px;
+  }
+
+  .project-card {
+    padding: 19px 18px 18px;
+    border-radius: 14px;
+  }
+
+  .project-card__top,
+  .project-card-header {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .project-card__meta,
+  .project-card-meta {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@media (forced-colors: active) {
+  .project-card,
+  .status-badge,
+  .priority-badge,
+  .project-status,
+  .project-priority {
+    border: 1px solid CanvasText;
+  }
+
+  .project-card:focus-within,
+  a:focus-visible,
+  button:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid Highlight;
+  }
+}

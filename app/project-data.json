@@ -1,0 +1,44 @@
+{
+  "projects": [
+    {
+      "name": "Atlas Design System",
+      "owner": "Maya Chen",
+      "status": "On track",
+      "recentActivity": "Published the updated form patterns and accessibility notes.",
+      "priority": "High",
+      "summary": "Unifies shared interface components so product teams can ship consistent, accessible experiences."
+    },
+    {
+      "name": "Northstar Analytics",
+      "owner": "Jordan Patel",
+      "status": "At risk",
+      "recentActivity": "Revised the event tracking plan; data review is waiting on a partner decision.",
+      "priority": "High",
+      "summary": "Gives teams a dependable view of activation and retention across the customer journey."
+    },
+    {
+      "name": "Greenline Migration",
+      "owner": "Elena García",
+      "status": "In progress",
+      "recentActivity": "Completed the staging rehearsal and documented the rollback checklist.",
+      "priority": "Medium",
+      "summary": "Moves legacy services to a maintainable platform in carefully tested release waves."
+    },
+    {
+      "name": "Field Notes Mobile",
+      "owner": "Sam Okafor",
+      "status": "On track",
+      "recentActivity": "Shared the offline-sync prototype with the research group for feedback.",
+      "priority": "Medium",
+      "summary": "Helps field teams capture observations reliably, including when connectivity is limited."
+    },
+    {
+      "name": "Community Grants Portal",
+      "owner": "Priya Nair",
+      "status": "Complete",
+      "recentActivity": "Handed the application guide and launch checklist to the program team.",
+      "priority": "Low",
+      "summary": "Makes grant applications easier to submit and review with a clear, guided workflow."
+    }
+  ]
+}

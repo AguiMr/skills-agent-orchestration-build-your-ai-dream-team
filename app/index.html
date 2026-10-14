@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A clear overview of project ownership, status, activity, and priority.">
+    <title>Project Pulse</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="dashboard-header">
+        <a class="brand" href="index.html" aria-label="Project Pulse home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M4 17.5 9 12l3.2 3.1L20 6.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15.5 6.5H20v4.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <span>Project Pulse</span>
+        </a>
+        <span class="header-note">Illustrative project overview</span>
+      </header>
+
+      <section class="dashboard-intro" aria-labelledby="page-title">
+        <p class="eyebrow">Team overview</p>
+        <h1 class="dashboard-title" id="page-title">A pulse on your projects</h1>
+        <p class="dashboard-description">See who is leading each effort, what has changed recently, and where attention is needed.</p>
+      </section>
+
+      <section aria-labelledby="projects-title">
+        <div class="dashboard-toolbar">
+          <h2 id="projects-title">Projects</h2>
+          <span class="dashboard-count" id="project-count" aria-live="polite"></span>
+        </div>
+        <div class="dashboard" id="project-list" aria-live="polite" aria-busy="true">
+          <div class="dashboard-message" role="status">
+            <p>Loading projects…</p>
+          </div>
+        </div>
+      </section>
+
+      <footer class="dashboard-footer">
+        Project information shown here is illustrative sample content.
+      </footer>
+    </main>
+
+    <script>
+      (() => {
+        const projectList = document.getElementById("project-list");
+        const projectCount = document.getElementById("project-count");
+
+        function displayValue(value, fallback = "Not specified") {
+          if (typeof value !== "string" && typeof value !== "number") {
+            return fallback;
+          }
+          const text = String(value).trim();
+          return text || fallback;
+        }
+
+        function normalizedValue(value) {
+          return displayValue(value, "")
+            .toLowerCase()
+            .normalize("NFKD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-|-$/g, "") || "unknown";
+        }
+
+        function statusDetails(value) {
+          const label = displayValue(value);
+          const normalized = normalizedValue(value);
+          const aliases = {
+            "on-track": "on-track",
+            "at-risk": "at-risk",
+            "needs-attention": "at-risk",
+            "in-progress": "active",
+            "in-progress-active": "active",
+            "ongoing": "active",
+            "off-track": "off-track",
+            "complete": "complete",
+            "completed": "completed",
+            "blocked": "blocked"
+          };
+          return { label, variant: aliases[normalized] || normalized };
+        }
+
+        function priorityDetails(value) {
+          const label = displayValue(value);
+          const normalized = normalizedValue(value);
+          const aliases = {
+            "highest": "critical",
+            "critical": "critical",
+            "urgent": "urgent",
+            "high": "high",
+            "normal": "medium",
+            "medium": "medium",
+            "low": "low"
+          };
+          return { label, variant: aliases[normalized] || normalized };
+        }
+
+        function makeElement(tagName, className, text) {
+          const element = document.createElement(tagName);
+          if (className) element.className = className;
+          if (text !== undefined) element.textContent = text;
+          return element;
+        }
+
+        function makeMetaItem(label, value) {
+          const item = makeElement("div", "meta-item");
+          item.append(
+            makeElement("span", "meta-label", label),
+            makeElement("span", "meta-value", value)
+          );
+          return item;
+        }
+
+        function makeProjectCard(project, index) {
+          const record = project && typeof project === "object" ? project : {};
+          const name = displayValue(record.name, `Untitled project ${index + 1}`);
+          const status = statusDetails(record.status);
+          const priority = priorityDetails(record.priority);
+
+          const card = makeElement("article", "project-card");
+          const top = makeElement("div", "project-card__top");
+          const heading = makeElement("div", "project-card__heading");
+          const title = makeElement("h3", "project-card__name", name);
+          title.id = `project-title-${index + 1}`;
+          card.setAttribute("aria-labelledby", title.id);
+          heading.append(
+            title,
+            makeElement("p", "project-card__owner", `Owner: ${displayValue(record.owner)}`)
+          );
+
+          const signals = makeElement("div", "project-card__signals");
+          const statusBadge = makeElement("span", "status-badge", status.label);
+          statusBadge.dataset.status = status.variant;
+          const priorityBadge = makeElement("span", "priority-badge", `Priority: ${priority.label}`);
+          priorityBadge.dataset.priority = priority.variant;
+          signals.append(statusBadge, priorityBadge);
+          top.append(heading, signals);
+
+          const summary = makeElement(
+            "p",
+            "project-card__summary",
+            displayValue(record.summary, "No summary provided.")
+          );
+          const meta = makeElement("div", "project-card__meta");
+          meta.append(makeMetaItem("Recent activity", displayValue(record.recentActivity)));
+          card.append(top, summary, meta);
+          return card;
+        }
+
+        function showMessage(className, message, isError = false) {
+          projectList.replaceChildren();
+          projectCount.textContent = "";
+          const container = makeElement("div", className);
+          if (isError) {
+            container.setAttribute("role", "alert");
+            container.append(
+              makeElement("h2", "", "Projects could not be loaded"),
+              makeElement("p", "", message)
+            );
+            const retry = makeElement("button", "", "Try again");
+            retry.type = "button";
+            retry.addEventListener("click", loadProjects);
+            container.append(retry);
+          } else {
+            container.setAttribute("role", "status");
+            container.append(makeElement("p", "", message));
+          }
+          projectList.append(container);
+          projectList.setAttribute("aria-busy", "false");
+        }
+
+        async function loadProjects() {
+          projectList.setAttribute("aria-busy", "true");
+          showMessage("dashboard-message", "Loading projects…");
+          projectList.setAttribute("aria-busy", "true");
+
+          try {
+            const response = await fetch("project-data.json", { cache: "no-store" });
+            if (!response.ok) {
+              throw new Error(`The project data request failed (${response.status}).`);
+            }
+
+            let data;
+            try {
+              data = await response.json();
+            } catch {
+              throw new Error("The project data file could not be read as valid JSON.");
+            }
+            if (!data || !Array.isArray(data.projects)) {
+              throw new Error("The project data must contain a projects array.");
+            }
+
+            if (data.projects.length === 0) {
+              projectList.replaceChildren();
+              const emptyState = makeElement("div", "dashboard-empty");
+              emptyState.setAttribute("role", "status");
+              emptyState.append(
+                makeElement("h2", "", "No projects to show yet"),
+                makeElement("p", "", "Project information will appear here when it is available.")
+              );
+              projectList.append(emptyState);
+              projectCount.textContent = "0 projects";
+              projectList.setAttribute("aria-busy", "false");
+              return;
+            }
+
+            const cards = data.projects.map(makeProjectCard);
+            projectList.replaceChildren(...cards);
+            projectCount.textContent = `${cards.length} ${cards.length === 1 ? "project" : "projects"}`;
+            projectList.setAttribute("aria-busy", "false");
+          } catch (error) {
+            const message = error instanceof Error
+              ? error.message
+              : "Check the project data file and try again.";
+            showMessage("dashboard-message", message, true);
+          }
+        }
+
+        loadProjects();
+      })();
+    </script>
+  </body>
+</html>
